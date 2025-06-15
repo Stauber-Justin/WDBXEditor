@@ -88,19 +88,26 @@ namespace WDBXEditor.Common
 			BfA
 		}
 
-		public enum ExpansionFinalBuild
-		{
-			Alpha = 3494,
-			Beta = 3988,
-			Classic = 6005,
-			TBC = 8606,
-			WotLK = 12340,
-			Cata = 15595,
-			MoP = 18414,
-			WoD = 21742,
-			Legion = 25901,
-			BfA = 26926,
-		}
+                public enum ExpansionFinalBuild
+                {
+                        Alpha = 3494,
+                        Beta = 3988,
+                        Classic = 6005,
+                        TBC = 8606,
+                        WotLK = 12340,
+                        Cata = 15595,
+                        MoP = 18414,
+                        WoD = 21742,
+                        Legion = 25901,
+                        BfA = 26926,
+                }
+
+                public enum OutputType
+                {
+                        CSV,
+                        SQL,
+                        JSON
+                }
 
 		static Constants()
 		{

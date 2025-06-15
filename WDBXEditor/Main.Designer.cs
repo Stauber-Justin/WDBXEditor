@@ -78,10 +78,11 @@ namespace WDBXEditor
 			this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toSQLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toSQLFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.toCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.toMPQToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.toJSONToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.importToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+                        this.toCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+                        this.toMPQToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+                        this.toJSONToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+                        this.batchExportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+                        this.importToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.fromSQLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.fromCSVToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -529,7 +530,8 @@ namespace WDBXEditor
             this.toSQLFileToolStripMenuItem,
             this.toCSVToolStripMenuItem,
             this.toMPQToolStripMenuItem,
-            this.toJSONToolStripMenuItem});
+            this.toJSONToolStripMenuItem,
+            this.batchExportToolStripMenuItem});
 			this.exportToolStripMenuItem.Name = "exportToolStripMenuItem";
 			this.exportToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
 			this.exportToolStripMenuItem.Text = "Export";
@@ -572,9 +574,17 @@ namespace WDBXEditor
 			this.toJSONToolStripMenuItem.Name = "toJSONToolStripMenuItem";
 			this.toJSONToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
 			this.toJSONToolStripMenuItem.Text = "To JSON";
-			this.toJSONToolStripMenuItem.Click += new System.EventHandler(this.toJSONToolStripMenuItem_Click);
-			// 
-			// importToolStripMenuItem
+                        this.toJSONToolStripMenuItem.Click += new System.EventHandler(this.toJSONToolStripMenuItem_Click);
+                        //
+                        // batchExportToolStripMenuItem
+                        //
+                        this.batchExportToolStripMenuItem.Image = global::WDBXEditor.Properties.Resources.save_file;
+                        this.batchExportToolStripMenuItem.Name = "batchExportToolStripMenuItem";
+                        this.batchExportToolStripMenuItem.Size = new System.Drawing.Size(132, 22);
+                        this.batchExportToolStripMenuItem.Text = "Batch Export";
+                        this.batchExportToolStripMenuItem.Click += new System.EventHandler(this.batchExportToolStripMenuItem_Click);
+                        //
+                        // importToolStripMenuItem
 			// 
 			this.importToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fromSQLToolStripMenuItem,
@@ -964,6 +974,7 @@ namespace WDBXEditor
         private System.Windows.Forms.ToolStripMenuItem deleteLineToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toJSONToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem batchExportToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem playerLocationRecorderToolStripMenuItem;
         private System.Windows.Forms.ComboBox cbColumnMode;
         private System.Windows.Forms.Label label8;

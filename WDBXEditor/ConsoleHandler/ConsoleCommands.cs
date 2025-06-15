@@ -219,6 +219,78 @@ namespace WDBXEditor.ConsoleHandler
             }
         }
 
+        public static void BatchExportCommand(string[] args)
+        {
+            var pmap = ConsoleManager.ParseCommand(args);
+            string filter = ParamCheck<string>(pmap, "-f", false);
+            string source = ParamCheck<string>(pmap, "-s", false);
+            int build = ParamCheck<int>(pmap, "-b");
+            string output = ParamCheck<string>(pmap, "-o");
+            OutputType oType = GetOutputType(ParamCheck<string>(pmap, "-t"));
+
+            if (string.IsNullOrWhiteSpace(filter))
+                filter = "*";
+
+            string regexfilter = "(" + Regex.Escape(filter).Replace(@"\*", @".*").Replace(@"\?", ".") + ")";
+            SourceType sType = GetSourceType(source);
+
+            List<string> files = new List<string>();
+            switch (sType)
+            {
+                case SourceType.MPQ:
+                    using (MpqArchive archive = new MpqArchive(source, FileAccess.Read))
+                    using (MpqFileStream listfile = archive.OpenFile("(listfile)"))
+                    using (StreamReader sr = new StreamReader(listfile))
+                    {
+                        string line = string.Empty;
+                        while ((line = sr.ReadLine()) != null)
+                        {
+                            if (Regex.IsMatch(line, regexfilter, RegexOptions.Compiled | RegexOptions.IgnoreCase))
+                                files.Add(Path.GetFileName(line));
+                        }
+                    }
+                    break;
+                case SourceType.CASC:
+                    using (var casc = new CASCHandler(source))
+                    {
+                        files.AddRange(Constants.ClientDBFileNames.Where(x => Regex.IsMatch(Path.GetFileName(x), regexfilter, RegexOptions.Compiled | RegexOptions.IgnoreCase))
+                                                             .Select(x => Path.GetFileName(x)));
+                    }
+                    break;
+                default:
+                    string dir = Path.GetDirectoryName(filter);
+                    if (string.IsNullOrWhiteSpace(dir))
+                        dir = Directory.GetCurrentDirectory();
+                    string pat = Path.GetFileName(filter);
+                    files.AddRange(Directory.GetFiles(dir, pat));
+                    break;
+            }
+
+            if (files.Count == 0)
+                throw new Exception("   No matching files found.");
+
+            Database.Entries.Clear();
+            foreach (var file in files)
+            {
+                List<string> loadArgs = new List<string> { "-f", file, "-b", build.ToString() };
+                if (!string.IsNullOrWhiteSpace(source))
+                {
+                    loadArgs.Add("-s");
+                    loadArgs.Add(source);
+                }
+                LoadCommand(loadArgs.ToArray());
+            }
+
+            var errs = Database.ExportFiles(output, oType).Result;
+            if (errs.Count > 0)
+            {
+                foreach (var err in errs)
+                    Console.WriteLine(err);
+            }
+            Console.WriteLine("   Successfully exported files.");
+            Console.WriteLine("");
+        }
+
         #endregion
         
         #region SQL Dump
@@ -291,6 +363,9 @@ namespace WDBXEditor.ConsoleHandler
         private static OutputType GetOutputType(string output)
         {
             string extension = Path.GetExtension(output).ToLower();
+            if (string.IsNullOrWhiteSpace(extension))
+                extension = "." + output.ToLower();
+
             switch (extension)
             {
                 case ".csv":
@@ -312,13 +387,6 @@ namespace WDBXEditor.ConsoleHandler
             CASC
         }
 
-        internal enum OutputType
-        {
-            CSV,
-            SQL,
-            MPQ,
-            JSON
-        }
         #endregion
     }
 }
