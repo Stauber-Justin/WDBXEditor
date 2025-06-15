@@ -772,9 +772,9 @@ namespace WDBXEditor
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void toJSONToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			if (!IsLoaded) return;
+                private void toJSONToolStripMenuItem_Click(object sender, EventArgs e)
+                {
+                        if (!IsLoaded) return;
 
 			using (var sfd = new SaveFileDialog())
 			{
@@ -802,10 +802,39 @@ namespace WDBXEditor
 						else
 							MessageBox.Show($"File successfully exported to {sfd.FileName}");
 
-					}, TaskScheduler.FromCurrentSynchronizationContext());
-				}
-			}
-		}
+                                        }, TaskScheduler.FromCurrentSynchronizationContext());
+                                }
+                        }
+                }
+
+                private void batchExportToolStripMenuItem_Click(object sender, EventArgs e)
+                {
+                        using (var fbd = new FolderBrowserDialog())
+                        {
+                                if (fbd.ShowDialog(this) == DialogResult.OK)
+                                {
+                                        string res = "CSV";
+                                        if (ShowInputDialog("Format (CSV, SQL, JSON):", "Export Format", res, ref res) != DialogResult.OK)
+                                                return;
+
+                                        if (!Enum.TryParse(res, true, out OutputType type))
+                                        {
+                                                MessageBox.Show("Invalid format selected.");
+                                                return;
+                                        }
+
+                                        ProgressBarHandle(true, "Exporting files...");
+                                        Task.Run(() => Database.ExportFiles(fbd.SelectedPath, type))
+                                                .ContinueWith(x =>
+                                                {
+                                                        if (x.Result.Count > 0)
+                                                                new ErrorReport(x.Result).ShowDialog(this);
+
+                                                        ProgressBarHandle(false);
+                                                }, TaskScheduler.FromCurrentSynchronizationContext());
+                                }
+                        }
+                }
 
 		#endregion
 

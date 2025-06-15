@@ -110,6 +110,28 @@ Arguments:
 <CODE>Example: -export -f "Achievement.dbc" -s "E:\WoW\Data\Patch-3.mpq" -b 11802 -o "Achievement.csv"</CODE>
 </P>
 
+<STRONG>Batch Export</STRONG>
+<P>
+Exports multiple files matching a filter to CSV, JSON or a SQL file.
+<BR>
+Arguments:
+<UL>
+<LI>
+-f : File filter, * is used as a wildcard
+<LI>
+-s : Source, this is the optional location of the MPQ file or the CASC directory
+<LI>
+-b : Build number to load the correct definition from
+<LI>
+-o Output directory, this is the folder to export the files to
+<LI>
+-t Output type, CSV, JSON or SQL
+</LI>
+</UL>
+<BR>
+<CODE>Example: -batchexport -f "*.dbc" -s "E:\WoW\Data" -b 12340 -o "C:\Export" -t csv</CODE>
+</P>
+
 <STRONG>SQL Dump</STRONG>
 <P>
 Dumps a specific file's data into a MySQL  database.

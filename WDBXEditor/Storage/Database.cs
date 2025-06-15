@@ -137,10 +137,10 @@ namespace WDBXEditor.Storage
 		#endregion
 
 		#region Save
-		public static async Task<List<string>> SaveFiles(string path)
-		{
-			List<string> _errors = new List<string>();
-			Queue<DBEntry> files = new Queue<DBEntry>(Entries);
+                public static async Task<List<string>> SaveFiles(string path)
+                {
+                        List<string> _errors = new List<string>();
+                        Queue<DBEntry> files = new Queue<DBEntry>(Entries);
 
 			var batchBlock = new BatchBlock<int>(100, new GroupingDataflowBlockOptions { BoundedCapacity = 100 });
 			var actionBlock = new ActionBlock<int[]>(t =>
@@ -163,11 +163,60 @@ namespace WDBXEditor.Storage
 				await batchBlock.SendAsync(i); // wait synchronously for the block to accept.
 
 			batchBlock.Complete();
-			await actionBlock.Completion;
+                        await actionBlock.Completion;
 
-			return _errors;
-		}
-		#endregion
+                        return _errors;
+                }
+
+                public static async Task<List<string>> ExportFiles(string folder, OutputType type)
+                {
+                        List<string> _errors = new List<string>();
+                        Queue<DBEntry> files = new Queue<DBEntry>(Entries);
+
+                        var batchBlock = new BatchBlock<int>(100, new GroupingDataflowBlockOptions { BoundedCapacity = 100 });
+                        var actionBlock = new ActionBlock<int[]>(t =>
+                        {
+                                for (int i = 0; i < t.Length; i++)
+                                {
+                                        DBEntry file = files.Dequeue();
+                                        try
+                                        {
+                                                string path = string.Empty;
+                                                string data = string.Empty;
+                                                switch (type)
+                                                {
+                                                        case OutputType.CSV:
+                                                                path = Path.Combine(folder, file.FileName + ".csv");
+                                                                data = file.ToCSV();
+                                                                break;
+                                                        case OutputType.SQL:
+                                                                path = Path.Combine(folder, file.FileName + ".sql");
+                                                                data = file.ToSQL();
+                                                                break;
+                                                        case OutputType.JSON:
+                                                                path = Path.Combine(folder, file.FileName + ".json");
+                                                                data = file.ToJSON();
+                                                                break;
+                                                }
+
+                                                File.WriteAllText(path, data);
+                                        }
+                                        catch (Exception ex) { _errors.Add($"{file} : {ex.Message}"); }
+                                }
+
+                                ForceGC();
+                        });
+                        batchBlock.LinkTo(actionBlock, new DataflowLinkOptions { PropagateCompletion = true });
+
+                        foreach (int i in Enumerable.Range(0, Entries.Count))
+                                await batchBlock.SendAsync(i);
+
+                        batchBlock.Complete();
+                        await actionBlock.Completion;
+
+                        return _errors;
+                }
+                #endregion
 
 		#region Defintions
 		public static async Task LoadDefinitions()
