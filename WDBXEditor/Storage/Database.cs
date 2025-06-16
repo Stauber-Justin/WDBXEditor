@@ -203,7 +203,6 @@ namespace WDBXEditor.Storage
                                                         case OutputType.JSON:
                                                                 WriteJsonChunks(file, folder, MaxJsonBytes);
                                                                 goto SkipWrite;
-                                                                break;
                                                 }
 
                                                 File.WriteAllText(path, data);
