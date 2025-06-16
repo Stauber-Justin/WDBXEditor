@@ -17,7 +17,12 @@ namespace WDBXEditor.Storage
 	{
 		public static Definition Definitions { get; set; } = new Definition();
 		public static List<DBEntry> Entries { get; set; } = new List<DBEntry>();
-		public static int BuildNumber { get; set; }
+                public static int BuildNumber { get; set; }
+
+                /// <summary>
+                /// Maximum size of a JSON export chunk in bytes.
+                /// </summary>
+                public const int MaxJsonBytes = 95 * 1024 * 1024;
 
 
 		#region Load
@@ -194,12 +199,13 @@ namespace WDBXEditor.Storage
                                                                 data = file.ToSQL();
                                                                 break;
                                                         case OutputType.JSON:
-                                                                path = Path.Combine(folder, file.FileName + ".json");
-                                                                data = file.ToJSON();
+                                                                WriteJsonChunks(file, folder, MaxJsonBytes);
+                                                                goto SkipWrite;
                                                                 break;
                                                 }
 
                                                 File.WriteAllText(path, data);
+SkipWrite:;
                                         }
                                         catch (Exception ex) { _errors.Add($"{file} : {ex.Message}"); }
                                 }
@@ -215,6 +221,63 @@ namespace WDBXEditor.Storage
                         await actionBlock.Completion;
 
                         return _errors;
+                }
+
+                private static void WriteJsonChunks(DBEntry entry, string folder, int maxBytes)
+                {
+                        if (entry.Data.Rows.Count == 0)
+                        {
+                                string emptyPath = Path.Combine(folder, entry.FileName + ".json");
+                                File.WriteAllText(emptyPath, "[]");
+                                return;
+                        }
+
+                        JavaScriptSerializer serializer = new JavaScriptSerializer() { MaxJsonLength = int.MaxValue };
+                        string[] columns = entry.Data.Columns.Cast<DataColumn>().Select(x => x.ColumnName).ToArray();
+
+                        StringBuilder sb = new StringBuilder();
+                        int bytes = Encoding.UTF8.GetByteCount("[");
+                        sb.Append('[');
+
+                        bool first = true;
+                        int index = 0;
+
+                        Action writeChunk = () =>
+                        {
+                                sb.Append(']');
+                                string name = index == 0 ?
+                                        Path.Combine(folder, entry.FileName + ".json") :
+                                        Path.Combine(folder, $"{entry.FileName}_{index}.json");
+                                File.WriteAllText(name, sb.ToString());
+                                sb.Clear();
+                                sb.Append('[');
+                                bytes = Encoding.UTF8.GetByteCount("[");
+                                first = true;
+                                index++;
+                        };
+
+                        foreach (DataRow row in entry.Data.Rows)
+                        {
+                                Dictionary<string, object> dict = new Dictionary<string, object>();
+                                object[] data = row.ItemArray;
+                                for (int i = 0; i < columns.Length; i++)
+                                        dict.Add(columns[i], data[i]);
+
+                                string rowJson = serializer.Serialize(dict);
+                                string prefix = first ? string.Empty : ",";
+                                int addBytes = Encoding.UTF8.GetByteCount(prefix + rowJson);
+
+                                if (bytes + addBytes + 1 > maxBytes)
+                                        writeChunk();
+
+                                if (!first)
+                                        sb.Append(',');
+                                sb.Append(rowJson);
+                                bytes += addBytes;
+                                first = false;
+                        }
+
+                        writeChunk();
                 }
                 #endregion
 
