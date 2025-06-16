@@ -28,7 +28,7 @@ You will need [Microsoft .NET Framework 4.8.1](https://dotnet.microsoft.com/en-u
 * A relatively powerful column filter system (similar to boolean search)
 * Displaying and editing columns in hex (numeric columns only)
 * Exporting to a SQL database, SQL file, CSV file and MPQ archives
-* Bulk export of all open files to CSV, SQL or JSON (GUI and `-batchexport` command)
+* Bulk export of all open files to CSV, SQL or JSON (GUI and `-batchexport` command). JSON exports are automatically split into 95 MB chunks.
 * Importing from a SQL database and a CSV file
 * An Excel style Find and Replace
 * Shortcuts for common tasks using common shortcut key combinations
