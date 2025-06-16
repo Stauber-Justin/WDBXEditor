@@ -48,3 +48,7 @@ This means any and all contribution in the form of commits, change requests, iss
 ### Credits:
 Credits go to Ladislav Zezula for the awesome StormLib and thanks to all those that contribute to the WoWDev wiki.
 I've also patched the definitions together for various sources across the internet, there are too many to name, but thanks to all.
+
+### Building
+Before building, restore the NuGet packages by running `nuget restore WDBXEditor.sln` or using Visual Studio's Restore option.
+Ensure that `MySql.Data` and `System.Threading.Tasks.Dataflow` exist in the `packages` directory before compiling.
