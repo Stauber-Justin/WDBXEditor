@@ -22,7 +22,7 @@ This will solve the following error:
 
 Run:
 ```
-winetricks dotnet461
+winetricks dotnet481
 ```
 
 Here you go, now you can run WDBX.exe
