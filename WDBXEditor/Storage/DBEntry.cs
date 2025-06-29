@@ -466,14 +466,56 @@ namespace WDBXEditor.Storage
 			return result;
 		}
 
-		public void ResetTemp()
-		{
-			min = -1;
-			max = -1;
-			unqiueRowIndices = null;
-			primaryKeys = null;
-		}
-		#endregion
+                public void ResetTemp()
+                {
+                        min = -1;
+                        max = -1;
+                        unqiueRowIndices = null;
+                        primaryKeys = null;
+                }
+
+                public void RenameColumn(string oldName, string newName)
+                {
+                        if (!Data.Columns.Contains(oldName))
+                                return;
+
+                        Data.Columns[oldName].ColumnName = newName;
+
+                        foreach (var field in TableStructure.Fields)
+                        {
+                                string[] names = field.ColumnNames.Split(',');
+                                for (int i = 0; i < field.ArraySize; i++)
+                                {
+                                        string columnName = field.Name;
+                                        if (field.ArraySize > 1)
+                                        {
+                                                if (names.Length >= (i + 1) && !string.IsNullOrWhiteSpace(names[i]))
+                                                        columnName = names[i];
+                                                else
+                                                        columnName = field.Name + "_" + (i + 1);
+                                        }
+
+                                        if (columnName == oldName)
+                                        {
+                                                if (field.ArraySize > 1)
+                                                {
+                                                        if (names.Length < field.ArraySize)
+                                                                Array.Resize(ref names, field.ArraySize);
+                                                        names[i] = newName;
+                                                        field.ColumnNames = string.Join(",", names);
+                                                }
+                                                else
+                                                {
+                                                        field.Name = newName;
+                                                }
+
+                                                field.InternalName = newName;
+                                                return;
+                                        }
+                                }
+                        }
+                }
+                #endregion
 
 
 		#region Exports

@@ -31,6 +31,7 @@ namespace ADGV
         public event EventHandler FilterChanged;
         public event EventHandler HexChanged;
         public event EventHandler HideChanged;
+        public event EventHandler RenameRequested;
 
         public SortType ActiveSortType
         {
@@ -80,6 +81,7 @@ namespace ADGV
             _textStrings.Add("NODESELECTALL", "(Select All)");
             _textStrings.Add("NODESELECTEMPTY", "(Blanks)");
             _textStrings.Add("HIDECOLUMN", "Hide");
+            _textStrings.Add("RENAMECOLUMN", "Rename");
             
             InitializeComponent();
             
@@ -365,6 +367,11 @@ namespace ADGV
         private void hideMenuItem_Click(object sender, EventArgs e)
         {
             HideChanged(this, new EventArgs());
+        }
+
+        private void renameMenuItem_Click(object sender, EventArgs e)
+        {
+            RenameRequested?.Invoke(this, new EventArgs());
         }
 
         private void sortASCMenuItem_Click(object sender, EventArgs e)

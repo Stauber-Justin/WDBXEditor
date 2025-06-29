@@ -104,6 +104,13 @@ namespace ADGV
             this.hideMenuItem.AutoSize = true;
             this.hideMenuItem.Size = new System.Drawing.Size(Width - 1, 22);
             this.hideMenuItem.Text = "Hide";
+            //
+            // renameMenuItem
+            //
+            this.renameMenuItem.Name = "renameMenuItem";
+            this.renameMenuItem.AutoSize = true;
+            this.renameMenuItem.Size = new System.Drawing.Size(Width - 1, 22);
+            this.renameMenuItem.Text = "Rename";
 
             this.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
                 hexDisplayMenuItem,
@@ -113,7 +120,9 @@ namespace ADGV
                 cancelSortMenuItem,
                 toolStripSeparator1MenuItem,
                 customFilterLastFiltersListMenuItem,
-                cancelFilterMenuItem,                
+                cancelFilterMenuItem,
+                hideMenuItem,
+                renameMenuItem,
             });
             
             this.Closed += new System.Windows.Forms.ToolStripDropDownClosedEventHandler(MenuStrip_Closed);
@@ -128,6 +137,7 @@ namespace ADGV
             this.cancelSortMenuItem.MouseEnter += new System.EventHandler(cancelSortMenuItem_MouseEnter);
             this.customFilterLastFiltersListMenuItem.Click += new System.EventHandler(customFilterMenuItem_Click);
             this.hideMenuItem.Click += new System.EventHandler(hideMenuItem_Click);
+            this.renameMenuItem.Click += new System.EventHandler(renameMenuItem_Click);
             this.hexDisplayMenuItem.Click += new System.EventHandler(hexDisplayMenuItem_Click);
 
 
@@ -145,5 +155,6 @@ namespace ADGV
         private System.Windows.Forms.ToolStripMenuItem customFilterLastFiltersListMenuItem;
         private System.Windows.Forms.ToolStripMenuItem hexDisplayMenuItem;
         private System.Windows.Forms.ToolStripMenuItem hideMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem renameMenuItem;
     }
 }

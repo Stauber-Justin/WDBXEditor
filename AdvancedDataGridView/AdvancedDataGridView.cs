@@ -17,6 +17,7 @@ namespace ADGV
     {
         public event EventHandler SortStringChanged;
         public event EventHandler FilterStringChanged;
+        public event ColumnHeaderCellEventHandler RenameColumn;
 
         public ContextMenu HeaderContext { get; set; }
         public bool FilterAndSortEnabled { get; set; }
@@ -108,6 +109,7 @@ namespace ADGV
             cell.FilterPopup += new ColumnHeaderCellEventHandler(cell_FilterPopup);
             cell.HideChanged += new ColumnHeaderCellEventHandler(cell_HideChanged);
             cell.HexChanged += new ColumnHeaderCellEventHandler(cell_HexChanged);
+            cell.RenameRequested += new ColumnHeaderCellEventHandler(cell_RenameRequested);
         }
 
         protected override void OnColumnRemoved(DataGridViewColumnEventArgs e)
@@ -124,6 +126,7 @@ namespace ADGV
                 cell.FilterPopup -= cell_FilterPopup;
                 cell.HideChanged -= cell_HideChanged;
                 cell.HexChanged -= cell_HexChanged;
+                cell.RenameRequested -= cell_RenameRequested;
             }
             base.OnColumnRemoved(e);
         }
@@ -340,6 +343,11 @@ namespace ADGV
                 e.Column.DefaultCellStyle.Tag = $"X";
 
             this.Refresh();
+        }
+
+        private void cell_RenameRequested(object sender, ColumnHeaderCellEventArgs e)
+        {
+            RenameColumn?.Invoke(this, e);
         }
 
         #endregion

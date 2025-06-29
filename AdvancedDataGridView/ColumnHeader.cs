@@ -13,6 +13,7 @@ namespace ADGV
         public event ColumnHeaderCellEventHandler FilterChanged;
         public event ColumnHeaderCellEventHandler HideChanged;
         public event ColumnHeaderCellEventHandler HexChanged;
+        public event ColumnHeaderCellEventHandler RenameRequested;
 
         public ColumnMenu MenuStrip { get; private set; }
         public bool FilterAndSortEnabled
@@ -141,6 +142,7 @@ namespace ADGV
                 MenuStrip.SortChanged += new EventHandler(menuStrip_SortChanged);
                 MenuStrip.HexChanged += new EventHandler(menuStrip_HexChanged);
                 MenuStrip.HideChanged += new EventHandler(menuStrip_HideChanged);
+                MenuStrip.RenameRequested += new EventHandler(menuStrip_RenameRequested);
             }
             else
             {
@@ -149,6 +151,7 @@ namespace ADGV
                 MenuStrip.SortChanged += new EventHandler(menuStrip_SortChanged);
                 MenuStrip.HexChanged += new EventHandler(menuStrip_HexChanged);
                 MenuStrip.HideChanged += new EventHandler(menuStrip_HideChanged);
+                MenuStrip.RenameRequested += new EventHandler(menuStrip_RenameRequested);
                 MenuStrip.IsSortEnabled = true;
                 MenuStrip.IsFilterEnabled = true;
             }
@@ -162,6 +165,7 @@ namespace ADGV
                 MenuStrip.SortChanged -= menuStrip_SortChanged;
                 MenuStrip.HexChanged -= menuStrip_HexChanged;
                 MenuStrip.HideChanged -= menuStrip_HideChanged;
+                MenuStrip.RenameRequested -= menuStrip_RenameRequested;
             }
         }
 
@@ -257,6 +261,11 @@ namespace ADGV
         {
             if (HexChanged != null)
                 HexChanged(this, new ColumnHeaderCellEventArgs(MenuStrip, OwningColumn));
+        }
+
+        private void menuStrip_RenameRequested(object sender, EventArgs e)
+        {
+            RenameRequested?.Invoke(this, new ColumnHeaderCellEventArgs(MenuStrip, OwningColumn));
         }
         #endregion
 

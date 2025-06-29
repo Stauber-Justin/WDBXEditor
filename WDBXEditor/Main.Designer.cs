@@ -796,15 +796,16 @@ namespace WDBXEditor
 			this.advancedDataGridView.TabIndex = 0;
 			this.advancedDataGridView.UndoRedoChanged += new System.EventHandler(this.advancedDataGridView_UndoRedoChanged);
 			this.advancedDataGridView.SortStringChanged += new System.EventHandler(this.advancedDataGridView_SortStringChanged);
-			this.advancedDataGridView.FilterStringChanged += new System.EventHandler(this.advancedDataGridView_FilterStringChanged);
-			this.advancedDataGridView.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.advancedDataGridView_CellValueChanged);
-			this.advancedDataGridView.CurrentCellChanged += new System.EventHandler(this.advancedDataGridView_CurrentCellChanged);
-			this.advancedDataGridView.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.advancedDataGridView_DataBindingComplete);
-			this.advancedDataGridView.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.advancedDataGridView_RowsAdded);
-			this.advancedDataGridView.RowsRemoved += new System.Windows.Forms.DataGridViewRowsRemovedEventHandler(this.advancedDataGridView_RowsRemoved);
-			this.advancedDataGridView.DragDrop += new System.Windows.Forms.DragEventHandler(this.advancedDataGridView_DragDrop);
-			this.advancedDataGridView.DragEnter += new System.Windows.Forms.DragEventHandler(this.advancedDataGridView_DragEnter);
-			this.advancedDataGridView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.advancedDataGridView_MouseDown);
+                        this.advancedDataGridView.FilterStringChanged += new System.EventHandler(this.advancedDataGridView_FilterStringChanged);
+                        this.advancedDataGridView.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.advancedDataGridView_CellValueChanged);
+                        this.advancedDataGridView.CurrentCellChanged += new System.EventHandler(this.advancedDataGridView_CurrentCellChanged);
+                        this.advancedDataGridView.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.advancedDataGridView_DataBindingComplete);
+                        this.advancedDataGridView.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.advancedDataGridView_RowsAdded);
+                        this.advancedDataGridView.RowsRemoved += new System.Windows.Forms.DataGridViewRowsRemovedEventHandler(this.advancedDataGridView_RowsRemoved);
+                        this.advancedDataGridView.DragDrop += new System.Windows.Forms.DragEventHandler(this.advancedDataGridView_DragDrop);
+                        this.advancedDataGridView.DragEnter += new System.Windows.Forms.DragEventHandler(this.advancedDataGridView_DragEnter);
+                        this.advancedDataGridView.RenameColumn += new ADGV.ColumnHeaderCellEventHandler(this.advancedDataGridView_RenameColumn);
+                        this.advancedDataGridView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.advancedDataGridView_MouseDown);
 			// 
 			// cbColumnMode
 			// 
