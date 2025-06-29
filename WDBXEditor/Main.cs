@@ -250,11 +250,36 @@ namespace WDBXEditor
 			}
 		}
 
-		private void advancedDataGridView_UndoRedoChanged(object sender, EventArgs e)
-		{
-			undoToolStripMenuItem.Enabled = advancedDataGridView.CanUndo;
-			redoToolStripMenuItem.Enabled = advancedDataGridView.CanRedo;
-		}
+                private void advancedDataGridView_UndoRedoChanged(object sender, EventArgs e)
+                {
+                        undoToolStripMenuItem.Enabled = advancedDataGridView.CanUndo;
+                        redoToolStripMenuItem.Enabled = advancedDataGridView.CanRedo;
+                }
+
+                private void advancedDataGridView_RenameColumn(object sender, ADGV.ColumnHeaderCellEventArgs e)
+                {
+                        if (!IsLoaded || e.Column == null)
+                                return;
+
+                        string newName = e.Column.HeaderText;
+                        if (ShowInputDialog("New column name:", "Rename Column", newName, ref newName) == DialogResult.OK)
+                        {
+                                if (string.IsNullOrWhiteSpace(newName) || LoadedEntry.Data.Columns.Contains(newName))
+                                {
+                                        MessageBox.Show("Invalid or duplicate column name.");
+                                        return;
+                                }
+
+                                string oldName = e.Column.Name;
+                                LoadedEntry.RenameColumn(oldName, newName);
+                                e.Column.Name = newName;
+                                e.Column.DataPropertyName = newName;
+                                e.Column.HeaderText = newName;
+
+                                columnFilter.Reset(LoadedEntry.Data.Columns, true);
+                                Database.Definitions.SaveDefinitions();
+                        }
+                }
 
 		private void advancedDataGridView_DragEnter(object sender, DragEventArgs e)
 		{
