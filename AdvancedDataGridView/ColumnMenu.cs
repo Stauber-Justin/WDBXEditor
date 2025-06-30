@@ -11,7 +11,7 @@ namespace ADGV
 {
 
     [System.ComponentModel.DesignerCategory("")]
-    internal partial class ColumnMenu : ContextMenuStrip
+    public partial class ColumnMenu : ContextMenuStrip
     {
         public enum FilterType : byte
         {
