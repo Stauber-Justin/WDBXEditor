@@ -419,8 +419,8 @@ namespace ADGV
 
     }
 
-    internal delegate void ColumnHeaderCellEventHandler(object sender, ColumnHeaderCellEventArgs e);
-    internal class ColumnHeaderCellEventArgs : EventArgs
+    public delegate void ColumnHeaderCellEventHandler(object sender, ColumnHeaderCellEventArgs e);
+    public class ColumnHeaderCellEventArgs : EventArgs
     {
         public ColumnMenu FilterMenu { get; private set; }
 
