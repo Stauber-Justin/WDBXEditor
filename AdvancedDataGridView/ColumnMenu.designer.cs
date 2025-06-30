@@ -1,7 +1,7 @@
 ﻿
 namespace ADGV
 {
-    partial class ColumnMenu
+    public partial class ColumnMenu
     {
         /// <summary>
         /// Required designer variable.
